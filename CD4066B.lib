@@ -1,0 +1,32 @@
+*===================================================================
+* CUSTOM BYPASS SPICE MODEL FOR CD4066BE (14-PIN SEQUENTIAL MAPPING)
+* Designed for macOS KiCad to eliminate 'ivlng.so' digital crashes.
+* This model forces all 4 transmission gates to be permanently ON 
+* (Ron = 100 ohms) and isolates control pins with 1GΩ dummy loads.
+*===================================================================
+* Pin Order: 1  2  3  4  5  6  7  8  9  10 11 12 13 14
+.SUBCKT CD4066BE 1  2  3  4  5  6  7  8  9  10 11 12 13 14
+
+* --- SWITCH A (Pins 1 & 2) ---
+Ra 1 2 100
+
+* --- SWITCH B (Pins 4 & 3) ---
+Rb 4 3 100
+
+* --- SWITCH C (Pins 8 & 9) ---
+Rc 8 9 100
+
+* --- SWITCH D (Pins 11 & 10) ---
+Rd 11 10 100
+
+* --- CONTROL & POWER PINS DUMMY LOADS ---
+* This links floating/tester select pins to VSS (Pin 7) 
+* through a massive 1 Giga-ohm resistance. It satisfies the SPICE 
+* matrix math so it won't crash, without affecting your circuit.
+R5  5  7 1G
+R6  6  7 1G
+R12 12 7 1G
+R13 13 7 1G
+R14 14 7 1G
+
+.ENDS CD4066BE

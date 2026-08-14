@@ -1,0 +1,6 @@
+* Ideal 5-Pin Open-Collector Comparator Model
+.SUBCKT IDEAL_COMP INP INN OUT VCC GND
+* Voltage controlled switch between OUT and GND triggered by (INP - INN)
+S1 OUT GND INP INN ISWITCH
+.MODEL ISWITCH VSWITCH(VTH=0V RON=10 ROFF=1G)
+.ENDS IDEAL_COMP

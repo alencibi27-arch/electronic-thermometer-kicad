@@ -1,0 +1,39 @@
+* ===============================================================
+* 74HC14: Hex Schmitt-Trigger Inverter
+* Compatible with KiCad / ngspice on macOS
+* ===============================================================
+
+* --- Macro Definition for a Single Schmitt Inverter ---
+.subckt schmitt_inv a y vdd vss
+c_ina a vss 3pf
+r_ina a vss 10meg
+
+* --- Dynamic Hysteresis Calculation ---
+* Vt- is ~35% VDD, Vt+ is ~55% VDD
+* The threshold dynamically shifts by 20% based on the output state V(y)
+b_logic internal_node vss v={ if( v(a) > (v(vdd) * (0.35 + 0.2 * (v(y)/(v(vdd)+1u)))), 0, v(vdd) ) }
+
+* --- Low-Pass Filter (Propagation Delay ~15ns) ---
+r_delay internal_node output_delayed 1k
+c_delay output_delayed vss 15pf
+
+* --- Output Driver Stage ---
+b_output y vss v={v(output_delayed)}
+r_out y output_delayed 50
+.ends schmitt_inv
+
+
+* --- Main 14-Pin IC Subcircuit Definition ---
+* Pinout mapping for standard 74xx library symbols
+* 1A 1Y 2A 2Y 3A 3Y VSS(GND) 4Y 4A 5Y 5A 6Y 6A VDD(VCC)
+.subckt 74hc14 1a 1y 2a 2y 3a 3y vss 4y 4a 5y 5a 6y 6a vdd
+
+* Instantiation of the 6 internal Schmitt Triggers
+x_inv1 1a 1y vdd vss schmitt_inv
+x_inv2 2a 2y vdd vss schmitt_inv
+x_inv3 3a 3y vdd vss schmitt_inv
+x_inv4 4a 4y vdd vss schmitt_inv
+x_inv5 5a 5y vdd vss schmitt_inv
+x_inv6 6a 6y vdd vss schmitt_inv
+
+.ends 74hc14

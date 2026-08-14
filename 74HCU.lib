@@ -1,0 +1,29 @@
+* --- Macro Definition for a Single NAND Gate ---
+* (Defined completely on its own first)
+.SUBCKT NAND_GATE A B Y VCC GND
+C_InA A GND 3pF
+C_InB B GND 3pF
+R_InA A GND 10Meg
+R_InB B GND 10Meg
+
+* Fixed logic calculation to prevent the 2.5V error
+B_Logic Internal_Node GND V={ if(V(A) > (V(VCC)/2) & V(B) > (V(VCC)/2), 0, V(VCC)) }
+
+R_Delay Internal_Node Output_Delayed 1k
+C_Delay Output_Delayed GND 10pF
+
+B_Output Y GND V={V(Output_Delayed)}
+R_Out Y Output_Delayed 50
+.ENDS NAND_GATE
+
+
+* --- Main 14-Pin IC Subcircuit Definition ---
+.SUBCKT 74HC00 1A 1B 1Y 2A 2B 2Y GND 3Y 3A 3B 4Y 4A 4B VCC
+
+* Instantiation of the four internal gates mapping to the 14-pin layout
+X_Gate1 1A 1B 1Y VCC GND NAND_GATE
+X_Gate2 2A 2B 2Y VCC GND NAND_GATE
+X_Gate3 3A 3B 3Y VCC GND NAND_GATE
+X_Gate4 4A 4B 4Y VCC GND NAND_GATE
+
+.ENDS 74HC00

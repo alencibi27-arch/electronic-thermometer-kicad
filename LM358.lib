@@ -1,0 +1,28 @@
+* LM358 Dual Op-Amp Subcircuit
+* Two independent op-amp units sharing VCC and GND
+* Unit A: INP1, INN1, OUT1
+* Unit B: INP2, INN2, OUT2
+* VCC = positive supply
+* GND = ground
+
+.SUBCKT LM358 INP1 INN1 OUT1 INP2 INN2 OUT2 VCC GND
+
+* Op-Amp Unit A
+* High gain differential amplifier model
+Rin1 INP1 INN1 1G
+Eout1 OUT1_INT 0 VALUE {
++ LIMIT(100000 * (V(INP1) - V(INN1)),
++ V(GND) + 0.02,
++ V(VCC) - 0.02)}
+Rout1 OUT1_INT OUT1 50
+
+* Op-Amp Unit B
+* High gain differential amplifier model
+Rin2 INP2 INN2 1G
+Eout2 OUT2_INT 0 VALUE {
++ LIMIT(100000 * (V(INP2) - V(INN2)),
++ V(GND) + 0.02,
++ V(VCC) - 0.02)}
+Rout2 OUT2_INT OUT2 50
+
+.ENDS LM358

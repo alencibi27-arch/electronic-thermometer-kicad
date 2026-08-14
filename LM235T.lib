@@ -1,0 +1,12 @@
+* LM235 Temperature Sensor Subcircuit
+* Vout = 2.98V at 25 degrees celsius
+
+.SUBCKT LM235 ANODE CATHODE ADJ
+
+* Simple voltage source modeling sensor output
+Vtemp CATHODE ANODE DC 2.98
+
+* ADJ pin tied through large resistor
+Radj ADJ ANODE 1G
+
+.ENDS LM235
